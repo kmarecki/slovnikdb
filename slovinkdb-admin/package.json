@@ -18,6 +18,8 @@
     "css-loader": "^0.28.8",
     "file-loader": "^1.1.6",
     "font-awesome": "^4.7.0",
+    "less": "^2.7.3",
+    "less-loader": "^4.0.5",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "style-loader": "^0.19.1",
