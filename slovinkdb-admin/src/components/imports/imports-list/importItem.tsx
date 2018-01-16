@@ -4,37 +4,33 @@ import { LanguagesList } from 'components/imports/imports-list/languagesList';
 
 export interface ImportItemProps {
     name: string;
-}
-
-export interface ImportItemState {
     expanded: boolean;
 
+    onCollapsed?: Function;
+    onExpanded?: Function;
 }
 
-export class ImportItem extends React.Component<ImportItemProps, ImportItemState> {
+export class ImportItem extends React.Component<ImportItemProps, any> {
 
     constructor(props: any) {
         super(props);
-
-        this.state = {
-            expanded: false
-        }
     }
 
     collapse(e: MouseEvent<HTMLAnchorElement>) {
         e.preventDefault();
-        
-        this.setState({
-            expanded: false
-        });
+
+        if (this.props.onCollapsed) {
+            this.props.onCollapsed();
+        }
     }
 
     expand(e: MouseEvent<HTMLAnchorElement>) {
         e.preventDefault();
 
-        this.setState({
-            expanded: true
-        });
+        if (this.props.onExpanded) {
+            this.props.onExpanded();
+        }
+       
     }
 
     public render() {
@@ -47,7 +43,7 @@ export class ImportItem extends React.Component<ImportItemProps, ImportItemState
                 </div>
                 <div className="col-md-2 pull-right">
                     {
-                        !this.state.expanded
+                        !this.props.expanded
                             ? <a className="btn" href="#"
                                 onClick={e => this.expand(e)}>
                                 <i className="fa fa-chevron-down" aria-hidden="true"></i>
@@ -59,7 +55,7 @@ export class ImportItem extends React.Component<ImportItemProps, ImportItemState
                     }
                 </div>
             </div>
-            { this.state.expanded 
+            { this.props.expanded 
                 ? <LanguagesList importName={this.props.name}/>
                 : null 
             }
