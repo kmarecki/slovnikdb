@@ -8,6 +8,7 @@ export interface ImportItemProps {
 
     onCollapsed?: Function;
     onExpanded?: Function;
+    onSelectLanguage?: (languageName: string) => any;
 }
 
 export class ImportItem extends React.Component<ImportItemProps, any> {
@@ -30,35 +31,37 @@ export class ImportItem extends React.Component<ImportItemProps, any> {
         if (this.props.onExpanded) {
             this.props.onExpanded();
         }
-       
+
     }
 
     public render() {
 
         return (
             <div>
-            <div className="row">
-                <div className="col-md-8">
-                    <p>{this.props.name}</p>
+                <div className="row">
+                    <div className="col-md-8">
+                        <p>{this.props.name}</p>
+                    </div>
+                    <div className="col-md-2 pull-right">
+                        {
+                            !this.props.expanded
+                                ? <a className="btn" href="#"
+                                    onClick={e => this.expand(e)}>
+                                    <i className="fa fa-chevron-down" aria-hidden="true"></i>
+                                </a>
+                                : <a className="btn" href="#"
+                                    onClick={e => this.collapse(e)} >
+                                    <i className="fa fa-chevron-up" aria-hidden="true"></i>
+                                </a>
+                        }
+                    </div>
                 </div>
-                <div className="col-md-2 pull-right">
-                    {
-                        !this.props.expanded
-                            ? <a className="btn" href="#"
-                                onClick={e => this.expand(e)}>
-                                <i className="fa fa-chevron-down" aria-hidden="true"></i>
-                            </a>
-                            : <a className="btn" href="#"
-                                onClick={e => this.collapse(e)} >
-                                <i className="fa fa-chevron-up" aria-hidden="true"></i>
-                            </a>
-                    }
-                </div>
-            </div>
-            { this.props.expanded 
-                ? <LanguagesList importName={this.props.name}/>
-                : null 
-            }
+                {this.props.expanded
+                    ? <LanguagesList
+                        importName={this.props.name}
+                        onSelectLanguage={this.props.onSelectLanguage} />
+                    : null
+                }
             </div>
         );
     }

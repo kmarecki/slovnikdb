@@ -2,12 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { ImportItem } from 'components/imports/imports-list/importItem';
 
+interface ImportsListProps {
+    onImportLanguageSelected?: (importName?: string, languageName?: string) => any;
+}
 
 interface ImportsListState {
     imports: { name: string, expanded: boolean }[];
 }
 
-export class ImportsList extends React.Component<any, ImportsListState> {
+export class ImportsList extends React.Component<ImportsListProps, ImportsListState> {
 
     constructor(props: any) {
         super(props);
@@ -35,6 +38,7 @@ export class ImportsList extends React.Component<any, ImportsListState> {
             }
         });
         this.setState(this.state);
+        this.onLanguageSelected(undefined, undefined);
     }
 
     expand(name: string) {
@@ -42,6 +46,13 @@ export class ImportsList extends React.Component<any, ImportsListState> {
             item.expanded = item.name == name;
         });
         this.setState(this.state);
+        this.onLanguageSelected(undefined, undefined);
+    }
+
+    onLanguageSelected(importName?: string, languageName?: string) {
+        if (this.props.onImportLanguageSelected) {
+            this.props.onImportLanguageSelected(importName, languageName);
+        }
     }
 
     public render() {
@@ -57,7 +68,8 @@ export class ImportsList extends React.Component<any, ImportsListState> {
                                     name={item.name}
                                     expanded={item.expanded}
                                     onCollapsed={() => this.collapse(item.name)}
-                                    onExpanded={() => this.expand(item.name)} />
+                                    onExpanded={() => this.expand(item.name)}
+                                    onSelectLanguage={(lang) => this.onLanguageSelected(item.name, lang)} />
                             </li>;
                         })}
                     </ul>

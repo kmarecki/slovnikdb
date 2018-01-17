@@ -1,4 +1,4 @@
-import React, {MouseEvent} from 'react';
+import React, { MouseEvent } from 'react';
 import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 
@@ -6,6 +6,7 @@ import { LanguageItem } from 'components/imports/imports-list/languageItem';
 
 interface LanguagesListProp {
     importName: string;
+    onSelectLanguage?: (languageName: string) => any;
 }
 
 interface LanguageListState {
@@ -39,10 +40,14 @@ export class LanguagesList extends React.Component<LanguagesListProp, LanguageLi
     }
 
     selectItem(name: string) {
-       this.state.langItems.forEach(item => {
+        this.state.langItems.forEach(item => {
             item.selected = item.name == name;
-       });
-       this.setState(this.state);
+        });
+        this.setState(this.state);
+
+        if (this.props.onSelectLanguage) {
+            this.props.onSelectLanguage(name);
+        }
     }
 
     public render() {
@@ -53,9 +58,9 @@ export class LanguagesList extends React.Component<LanguagesListProp, LanguageLi
                     {this.state.langItems.map(item => {
                         let classes = classnames('list-group-item', { active: item.selected });
                         return (
-                            <li className={classes} key={item.name} onClick = { e => this.selectItem(item.name) }>
-                                <LanguageItem 
-                                    name={item.name} 
+                            <li className={classes} key={item.name} onClick={e => this.selectItem(item.name)}>
+                                <LanguageItem
+                                    name={item.name}
                                     pageCount={item.pageCount} />
                             </li>);
                     })}
