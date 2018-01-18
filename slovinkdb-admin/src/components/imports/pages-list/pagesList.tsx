@@ -6,6 +6,7 @@ import { PageItem } from 'components/imports/pages-list/pageItem';
 interface PageListProps {
     importName?: string;
     languageName?: string;
+    onPageSelected?: (pageName: string) => any;
 }
 
 interface PageListState {
@@ -17,6 +18,7 @@ export class PagesList extends React.Component<PageListProps, PageListState> {
 
     constructor(props: any) {
         super(props);
+
     }
 
     loadPages() {
@@ -34,15 +36,19 @@ export class PagesList extends React.Component<PageListProps, PageListState> {
         this.setState(state);
     }
 
-    componentWillReceiveProps() {
-        this.loadPages();
-    }
-
     selectPage(name: string) {
         this.state.pages.forEach(item => {
             item.selected = item.name == name;
         });
         this.setState(this.state);
+
+        if (this.props.onPageSelected) {
+            this.props.onPageSelected(name);
+        }
+    }
+
+    componentWillReceiveProps() {
+       this.loadPages();
     }
     public render() {
 
@@ -72,8 +78,7 @@ export class PagesList extends React.Component<PageListProps, PageListState> {
             </div>
             : <div className="panel panel-default">
                 <div className="panel-heading">Pages</div>
-                <div className="panel-body">
-                </div>
+                <div className="panel-body"></div>
             </div>
 
     }

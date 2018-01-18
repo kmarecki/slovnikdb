@@ -7,6 +7,7 @@ import { PageDetail } from 'components/imports/page-detail/pageDetail';
 interface WikiImportsState {
   selectedImport?: string;
   selectedLanguage?: string;
+  selectedPage?: string;
 }
 export class WikiImports extends React.Component<any, WikiImportsState> {
 
@@ -15,14 +16,25 @@ export class WikiImports extends React.Component<any, WikiImportsState> {
 
     this.state = {
       selectedImport: undefined,
-      selectedLanguage: undefined
+      selectedLanguage: undefined,
+      selectedPage: undefined
     };
   }
 
   selectImportLanguage(importName?: string, languageName?: string) {
     const state = {
       selectedImport: importName,
-      selectedLanguage: languageName
+      selectedLanguage: languageName,
+      selectPage: undefined
+    };
+    this.setState(state);
+  }
+
+  selectPage(pageName?: string) {
+    const state = {
+      selectedImport: this.state.selectedImport,
+      selectedLanguage: this.state.selectedLanguage,
+      selectedPage: pageName
     };
     this.setState(state);
   }
@@ -34,16 +46,22 @@ export class WikiImports extends React.Component<any, WikiImportsState> {
         <div className="row">
           <div className="col-md-3">
             <ImportsList 
-              onImportLanguageSelected={(importName, languageName) => this.selectImportLanguage(importName, languageName)}/>
+              onImportLanguageSelected={(importName, languageName) => this.selectImportLanguage(importName, languageName)}
+            />
           </div>
           <div className="col-md-2">
             <PagesList 
               importName={this.state.selectedImport}
               languageName={this.state.selectedLanguage}
+              onPageSelected={(pageName) => this.selectPage(pageName)}
             />
           </div>
           <div className="col-md-7">
-            <PageDetail/>
+            <PageDetail
+              importName={this.state.selectedImport}
+              languageName={this.state.selectedLanguage}
+              pageName={this.state.selectedPage}
+            />
           </div>
         </div>
       </div>
