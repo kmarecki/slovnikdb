@@ -19,6 +19,8 @@ export class PagesList extends React.Component<PageListProps, PageListState> {
     constructor(props: any) {
         super(props);
 
+
+
     }
 
     loadPages() {
@@ -47,12 +49,15 @@ export class PagesList extends React.Component<PageListProps, PageListState> {
         }
     }
 
-    componentWillReceiveProps() {
-       this.loadPages();
+    componentWillReceiveProps(nextProps: PageListProps) {
+        if (nextProps.importName != this.props.importName ||
+            nextProps.languageName != this.props.languageName) {
+            this.loadPages();
+        }
     }
     public render() {
 
-        return this.props.importName && this.props.languageName
+        return this.props.importName && this.props.languageName && this.state
             ? <div className="panel panel-default">
                 <div className="panel-heading">Pages</div>
                 <div className="panel-body">
@@ -61,12 +66,12 @@ export class PagesList extends React.Component<PageListProps, PageListState> {
                     </p>
                     <ul className="list-group">
                         {this.state.pages.map(page => {
-                            let classes = classnames('list-group-item list-group-item-small', 
+                            let classes = classnames('list-group-item list-group-item-small',
                                 { active: page.selected });
-                            return <li 
-                                className={classes} 
-                                key={page.name} 
-                                onClick={e => this.selectPage(page.name) }>
+                            return <li
+                                className={classes}
+                                key={page.name}
+                                onClick={e => this.selectPage(page.name)}>
                                 <PageItem
                                     name={page.name}
                                     selected={page.selected}

@@ -25,7 +25,7 @@ export class WikiImports extends React.Component<any, WikiImportsState> {
     const state = {
       selectedImport: importName,
       selectedLanguage: languageName,
-      selectPage: undefined
+      selectedPage: undefined
     };
     this.setState(state);
   }
