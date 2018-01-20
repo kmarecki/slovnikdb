@@ -2,25 +2,24 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 import { PageItem } from 'components/imports/pages-list/pageItem';
+import { ListPager } from 'components/imports/pages-list/listPager';
 
 interface PageListProps {
     importName?: string;
     languageName?: string;
-    onPageSelected?: (pageName: string) => any;
+    onPageSelected?: (pageName?: string) => any;
 }
 
 interface PageListState {
     pages: { name: string, selected: boolean }[];
     pageCount: number;
+    currentPage: number;
 }
 
 export class PagesList extends React.Component<PageListProps, PageListState> {
 
     constructor(props: any) {
         super(props);
-
-
-
     }
 
     loadPages() {
@@ -33,7 +32,8 @@ export class PagesList extends React.Component<PageListProps, PageListState> {
                     selected: false
                 }
             }),
-            pageCount: pageCount
+            pageCount: pageCount,
+            currentPage: 1
         };
         this.setState(state);
     }
@@ -42,10 +42,18 @@ export class PagesList extends React.Component<PageListProps, PageListState> {
         this.state.pages.forEach(item => {
             item.selected = item.name == name;
         });
-        this.setState(this.state);
 
         if (this.props.onPageSelected) {
             this.props.onPageSelected(name);
+        }
+    }
+
+    clearSelected() {
+        this.state.pages.forEach(item => {
+            item.selected = false;
+        });
+        if (this.props.onPageSelected) {
+            this.props.onPageSelected(undefined);
         }
     }
 
@@ -55,17 +63,36 @@ export class PagesList extends React.Component<PageListProps, PageListState> {
             this.loadPages();
         }
     }
+
+    nextPage() {
+        this.setState({ currentPage: this.state.currentPage + 1 });
+        this.clearSelected();
+    }
+
+    previousPage() {
+        this.setState({ currentPage: this.state.currentPage - 1 });
+        this.clearSelected();
+    }
     public render() {
 
-        return this.props.importName && this.props.languageName && this.state
-            ? <div className="panel panel-default">
+        if (this.props.importName && this.props.languageName && this.state) {
+            const pageSize = 20;
+            const currentPageItems =
+                this.state.pages.slice((this.state.currentPage - 1) * pageSize, this.state.currentPage * pageSize);
+
+            return <div className="panel panel-default">
                 <div className="panel-heading">Pages</div>
                 <div className="panel-body">
                     <p>
                         <span>({this.state.pageCount}) {this.props.languageName}</span>
                     </p>
+                    <ListPager
+                        page={this.state.currentPage}
+                        pageCount={Math.ceil(this.state.pageCount / pageSize)}
+                        onNextClicked={() => this.nextPage()}
+                        onPreviousClicked={() => this.previousPage()} />
                     <ul className="list-group">
-                        {this.state.pages.map(page => {
+                        {currentPageItems.map(page => {
                             let classes = classnames('list-group-item list-group-item-small',
                                 { active: page.selected });
                             return <li
@@ -81,10 +108,11 @@ export class PagesList extends React.Component<PageListProps, PageListState> {
                     </ul>
                 </div>
             </div>
-            : <div className="panel panel-default">
-                <div className="panel-heading">Pages</div>
-                <div className="panel-body"></div>
-            </div>
+        }
+        return <div className="panel panel-default">
+            <div className="panel-heading">Pages</div>
+            <div className="panel-body"></div>
+        </div>
 
     }
 };
